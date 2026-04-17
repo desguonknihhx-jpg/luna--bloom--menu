@@ -483,8 +483,6 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 
-
-
 // 1. هاوردەکرنا فایربەیس ب ڕێکا لێنکێن CDN دا کو ل سەر Netlify کار بکەت
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -514,5 +512,3 @@ const renderMenuFromFirebase = () => {
 };
 
 renderMenuFromFirebase();
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
