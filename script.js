@@ -485,14 +485,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+// 1. هاوردەکرنا فایربەیس ب ڕێکا لێنکێن CDN دا کو ل سەر Netlify کار بکەت
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+import { getFirestore, collection, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+// 2. کلیلێن تە (یێن درستن)
 const firebaseConfig = {
   apiKey: "AIzaSyAn96Nxn_v2O1KQUkKJ6CuNEZ4BB1FxJ_0",
   authDomain: "luna-bloom-menu.firebaseapp.com",
@@ -503,6 +500,19 @@ const firebaseConfig = {
   measurementId: "G-9ZQPMZCBH9"
 };
 
-// Initialize Firebase
+// 3. دەستپێکرن
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+// --- فەنکشنا کێشانا ئایتمان (بۆ کڕیاری) ---
+const renderMenuFromFirebase = () => {
+    onSnapshot(collection(db, "menu_items"), (snapshot) => {
+        // ل ڤێرە فەنکشنا خۆ یا ڕێندەرکرنێ بانگ بکە 
+        // بۆ نموونە: renderMenu(snapshot.docs.map(doc => doc.data()));
+        console.log("Datha ji Firebase hatin!");
+    });
+};
+
+renderMenuFromFirebase();
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
