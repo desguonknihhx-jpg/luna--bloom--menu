@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ku" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Luna Bloom Menu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body id="body-tag">
+
+    <!-- Header -->
+    <header>
+        <h1 id="brand-name">Luna Bloom</h1>
+        
+        <!-- Language & Admin Container -->
+        <div class="lang-container">
+            <button class="lang-btn" id="langBtn">
+                <i class="fas fa-language"></i>
+                <span id="btn-text">زمان</span>
+            </button>
+            
+            <!-- Enhanced Dropdown with Admin Option Inside -->
+            <div class="lang-dropdown" id="langBox">
+                
+                <!-- Language Options Section -->
+                <div class="dropdown-section-title">🌐 زمان / Language</div>
+                
+                <div class="lang-option" onclick="changeLang('ku')">
+                    <span>بادینانی (کوردی)</span>
+                    <i class="fas fa-flag"></i>
+                </div>
+                
+                <div class="lang-option" onclick="changeLang('ar')">
+                    <span>العربية</span>
+                    <i class="fas fa-flag"></i>
+                </div>
+                
+                <div class="lang-option" onclick="changeLang('en')">
+                    <span>English</span>
+                    <i class="fas fa-flag"></i>
+                </div>
+
+                <!-- Admin Login Option (Hidden in Plain Sight!) -->
+                <div class="admin-option" onclick="showPasswordModal()">
+                    <span>چوونە ناو ئەدمین</span>
+                    <i class="fas fa-user-shield"></i>
+                </div>
+
+                <!-- User Info -->
+                <div class="user-info">
+                    <strong>ئامادەکرن: رەیان یوسف الدوسكى</strong>
+                    📞 07503206040
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Category Navigation -->
+    <nav class="category-scroll" id="cat-container"></nav>
+
+    <!-- Menu Container -->
+    <div id="menu-container"></div>
+
+    <!-- ===== PASSWORD MODAL ===== -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal-box">
+            <button class="btn-close-modal" onclick="closePasswordModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-icon">
+                <i class="fas fa-lock"></i>
+            </div>
+            
+            <h3 class="modal-title">چوونە ناو ئەدمین</h3>
+            <p class="modal-subtitle">تکایە پاسووردەکە بنووسە بۆ دەستپێگەیشتن</p>
+            
+            <div class="error-message" id="errorMsg">
+                <i class="fas fa-exclamation-circle"></i> پاسووردەکە هەڵەیە! تکایە دووبارە بکەوە.
+            </div>
+            
+            <div class="input-group">
+                <label>پاسوورد:</label>
+                <input type="password" id="passwordInput" placeholder="••••••••" maxlength="20" autocomplete="off">
+                <i class="fas fa-eye toggle-password" onclick="togglePassword()"></i>
+            </div>
+            
+            <button class="btn-primary" onclick="checkPassword()">
+                <i class="fas fa-sign-in-alt"></i> چوونەناو
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== ADD/EDIT ITEM MODAL ===== -->
+    <div class="modal-overlay" id="itemModal">
+        <div class="modal-box" style="max-width: 650px;">
+            <button class="btn-close-modal" onclick="closeItemModal()">
+                <i class="fas fa-times"></i>
+            </button>
+            
+            <div class="modal-icon">
+                <i class="fas fa-plus-circle" id="modalIconTitle"></i>
+            </div>
+            
+            <h3 class="modal-title" id="modalTitle">زیادکردنی ئایتەم نوێ</h3>
+            <p class="modal-subtitle" id="modalSubtitle">زانیاری ئایتەمەکە پڕبکەرەوە</p>
+            
+            <form id="itemForm" onsubmit="saveItem(event)">
+                <div class="form-grid">
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-tag"></i> ناوی ئایتەم:</label>
+                        <input type="text" id="itemName" placeholder="نووسینی ناو..." required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-folder"></i> پۆلین:</label>
+                        <select id="itemCategory" required>
+                            <option value="">هەڵبژێرە...</option>
+                            <option value="mojito">موهیتو</option>
+                            <option value="icecream">ئایس کریم</option>
+                            <option value="hot">گەرم</option>
+                            <option value="cold">سارد</option>
+                            <option value="pancake">پانکەیک</option>
+                            <option value="cupcake">کاپکەیک</option>
+                            <option value="bakery">کرواسان</option>
+                            <option value="waffle">وافل</option>
+                            <option value="juice">شەربەت</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><i class="fas fa-money-bill-wave"></i> نرخ (IQD):</label>
+                        <input type="text" id="itemPrice" placeholder="نموونە: 4,000" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label><i class="fas fa-image"></i> وێنەی ئایتەم:</label>
+                        <div class="image-upload-area" onclick="document.getElementById('itemImage').click()" id="uploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>کرتە بکە یان ڕایکێشە وێنە</p>
+                            <p style="font-size: 11px; margin-top: 5px;">PNG, JPG, WEBP (ماکس 5MB)</p>
+                            <input type="file" id="itemImage" accept="image/*" onchange="previewImage(event)" style="display: none;">
+                        </div>
+                        <img src="" alt="Preview" class="image-preview" id="imagePreview">
+                    </div>
+                </div>
+                
+                <input type="hidden" id="editItemId" value="">
+                <input type="hidden" id="editItemCategory" value="">
+                
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel" onclick="closeItemModal()">
+                        <i class="fas fa-times"></i> پاشگەزبوونەوە
+                    </button>
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-save"></i> پاشەکەوتکردن
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ===== ADMIN PANEL ===== -->
+    <div class="admin-panel" id="adminPanel">
+        <div class="admin-header">
+            <h2>
+                <i class="fas fa-cog"></i>
+                بەڕێوەبردنی مینۆ
+            </h2>
+            <div class="admin-actions">
+                <button class="btn-admin-action btn-add-item" onclick="openAddItemModal()">
+                    <i class="fas fa-plus"></i> زیادکردنی نوێ
+                </button>
+                <button class="btn-admin-action btn-logout" onclick="logoutAdmin()">
+                    <i class="fas fa-sign-out-alt"></i> دەرچوون
+                </button>
+            </div>
+        </div>
+        
+        <div class="admin-content" id="adminContent"></div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast">
+        <i class="fas fa-check-circle"></i>
+        <span id="toastMessage">سەرکەوتوو!</span>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
